@@ -23,7 +23,7 @@
             <th>Bæta við körfu</th>
           </tr>
         </thead>
-        <tbody>
+        <tbody class="cart-content">
           <tr data-product-id="1">
             <td>HTML húfa</td>
             <td>Húfa sem heldur hausnum heitum og hvíslar hugsanlega að þér hvaða element væri best að nota.</td>
@@ -77,10 +77,10 @@
             <th>Eyða</th>
           </tr>
         </thead>
-        <tbody>
+        <tbody class="cart-content">
           <tr data-cart-product-id="1">
             <td class="title">HTML húfa</td>
-            <td class="quantity">1</td>
+            <td class="quantity">0</td>
             <td class="price"><span class="price">5.000 kr.-</span></td>
             <td class="total"><span class="price">5.000 kr.-</span></td>
             <td>
@@ -90,10 +90,39 @@
             </td>
           </tr>
         </tbody>
+     
+        <tbody class="cart-content">
+          <tr data-cart-product-id="2">
+            <td class="title">CSS Sokkar</td>
+            <td class="quantity">0</td>
+            <td class="price"><span class="price">3.000 kr.-</span></td>
+            <td class="total"><span class="price">3.000 kr.-</span></td>
+            <td>
+              <form class="remove" method="post">
+                <button>Eyða</button>
+              </form>
+            </td>
+          </tr>
+        </tbody>
+
+        <tbody class="cart-content">
+          <tr data-cart-product-id="3">
+            <td class="title">JavaScript jakki</td>
+            <td class="quantity">0</td>
+            <td class="price"><span class="price">20.000 kr.-</span></td>
+            <td class="total"><span class="price">20.000 kr.-</span></td>
+            <td>
+             <form class="remove" method="post"> 
+                <button>Eyða</button>
+              </form> 
+            </td>
+          </tr>
+        </tbody>
+
         <tfoot>
           <tr>
             <td colspan="3">Samtals</td>
-            <td><span class="price">5.000 kr.-</span></td>
+            <td><span class="pprice">5.000 kr.-</span></td>
             <td></td>
           </tr>
         </tfoot>

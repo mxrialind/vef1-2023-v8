@@ -1,75 +1,77 @@
-import { createCartLine, showCartContent } from './lib/ui.js';
 
 const products = [
   {
     id: 1,
     title: 'HTML húfa',
-    description:
-      'Húfa sem heldur hausnum heitum og hvíslar hugsanlega að þér hvaða element væri best að nota.',
-    price: 5_000,
+    price: 5000,
   },
   {
     id: 2,
     title: 'CSS sokkar',
-    description: 'Sokkar sem skalast vel með hvaða fótum sem er.',
-    price: 3_000,
+    price: 3000,
   },
   {
     id: 3,
     title: 'JavaScript jakki',
-    description: 'Mjög töff jakki fyrir öll sem skrifa JavaScript reglulega.',
-    price: 20_000,
+    price: 20000,
   },
 ];
 
-/** Bæta vöru í körfu */
-function addProductToCart(product, quantity) {
-  // Hér þarf að finna `<tbody>` í töflu og setja `cartLine` inn í það
-  const cart = document.querySelector('.cart-content');
 
-  if (!cart) {
-    console.warn('fann ekki .cart');
+function addProductToCart(productId, quantity) {
+  const product = products.find((p) => p.id === productId);
+
+  if (!product) {
+    console.error('Product not found');
     return;
   }
-  
-  // TODO hér þarf að athuga hvort lína fyrir vöruna sé þegar til
-  const cartLine = createCartLine(product, quantity);
-  cart.appendChild(cartLine);
 
-  // Sýna efni körfu
-  showCartContent(true);
+  const cartEntry = document.querySelector(`[data-cart-product-id="${productId}"]`);
+  if (cartEntry) {
+    const quantityElement = cartEntry.querySelector('.quantity');
+    const priceElement = cartEntry.querySelector('.price');
 
-  // TODO sýna/uppfæra samtölu körfu
+    const currentQuantity = parseInt(quantityElement.textContent);
+    const newQuantity = currentQuantity + quantity;
+
+    quantityElement.textContent = newQuantity;
+    priceElement.textContent = `${product.price * newQuantity} kr.-`;
+  } else {
+    
+    const cartTable = document.querySelector('.cart-table');
+    const newRow = document.createElement('tr');
+    newRow.setAttribute('data-cart-product-id', productId);
+
+    newRow.innerHTML = `
+      <td class="title">${product.title}</td>
+      <td class="quantity">${quantity}</td>
+      <td class="price">${product.price * quantity} kr.-</td>
+        <td class="remove">
+        <button onclick="removeProductFromCart(${productId})">Eyða</button>
+      </td>
+    `;
+
+    cartTable.querySelector('tbody').appendChild(newRow);
+  }
 }
 
-function submitHandler(event) {
-  // Komum í veg fyrir að form submiti
-  event.preventDefault();
-  
-  // Finnum næsta element sem er `<tr>`
-  const parent = event.target.closest('tr')
 
-  // Það er með attribute sem tiltekur auðkenni vöru, t.d. `data-product-id="1"`
-  const productId = Number.parseInt(parent.dataset.productId);
-
-  // Finnum vöru með þessu productId
-  const product = products.find((i) => i.id === productId);
-
-  // TODO hér þarf að finna fjölda sem á að bæta við körfu með því að athuga
-  // á input
-  const quantity = 1;
-
-  // Bætum vöru í körfu (hér væri gott að bæta við athugun á því að varan sé til)
-  addProductToCart(product, quantity);
+function removeProductFromCart(productId) {
+  const cartEntry = document.querySelector(`[data-cart-product-id="${productId}"]`);
+  if (cartEntry) {
+    cartEntry.remove();
+  } 
 }
 
-// Finna öll form með class="add"
-const addToCartForms = document.querySelectorAll('.add')
 
-// Ítra í gegnum þau sem fylki (`querySelectorAll` skilar NodeList)
-for (const form of Array.from(addToCartForms)) {
-  // Bæta submit event listener við hvert
-  form.addEventListener('submit', submitHandler);
-}
-
-// TODO bæta við event handler á form sem submittar pöntun
+const addToCartForms = document.querySelectorAll('.add');
+addToCartForms.forEach((form) => {
+  form.addEventListener('submit', function (event) {
+    event.preventDefault();
+    const productId = parseInt(form.closest('tr').getAttribute('data-product-id'));
+    const quantityInput = form.querySelector('input[type="number"]');
+    const quantity = parseInt(quantityInput.value);
+    addProductToCart(productId, quantity);
+    quantityInput.value = 0; 
+  });
+});
